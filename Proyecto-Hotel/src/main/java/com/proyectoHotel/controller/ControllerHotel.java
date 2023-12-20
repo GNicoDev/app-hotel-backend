@@ -15,9 +15,9 @@ import java.util.Optional;
 @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080"})
 public class ControllerHotel {
     @Autowired
-    HabitacionesServiceImpl habitacionesService;
+    HabitacionesService habitacionesService;
     @Autowired
-    ClientesServiceImpl clientesService;
+    ClientesService clientesService;
 
     @PostMapping("reservar/{idCliente}")
     public ResponseEntity<?> checkIn(@RequestBody HabitacionesDTO habDTO, @PathVariable Long idCliente) {
