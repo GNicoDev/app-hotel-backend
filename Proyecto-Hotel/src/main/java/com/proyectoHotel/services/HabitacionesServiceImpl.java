@@ -96,7 +96,7 @@ public class HabitacionesServiceImpl implements HabitacionesService{
     }
 
     @Override
-    public Clientes returnClientRomm(Long idRoom) {
+    public Clientes returnClientRoom(Long idRoom) {
         Optional<Habitaciones> optionalHabitaciones = habitacionesRepository.findById(idRoom);
         Habitaciones habitacion = optionalHabitaciones.get();
         return habitacion.getClientes();

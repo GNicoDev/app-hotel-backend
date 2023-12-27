@@ -24,9 +24,9 @@ public class ControllerHabitaciones {
     @Autowired
     HabitacionesService habitacionesService;
 
-    // FIND CLIENT BY ID
+    // FIND ROOM BY ID
     @GetMapping("buscar/{id}")
-    public ResponseEntity<?> findClientById(@PathVariable Long id) {
+    public ResponseEntity<?> findRoomById(@PathVariable Long id) {
 
         Optional<Habitaciones> optionalHabitaciones = habitacionesService.findById(id);
         if (optionalHabitaciones.isPresent()) {
@@ -94,10 +94,25 @@ public class ControllerHabitaciones {
     @GetMapping("listardisponibles/{cantHuespedes}")
     public ResponseEntity<?> listRoomsAvailable(@PathVariable int cantHuespedes) {
         List<Habitaciones> habitacionesList = habitacionesService.listRoomsAvailable(cantHuespedes);
-        if (habitacionesList != null)
-            return ResponseEntity.ok(habitacionesList);
+        if (habitacionesList != null) {
+            List<HabitacionesDTO> habitacionesDTOList = new ArrayList<>();
+            for (Habitaciones habitaciones : habitacionesList) {
+                HabitacionesDTO habitacionesDTO = HabitacionesDTO.builder()
+                        .id(habitaciones.getId())
+                        .nroHabitacion(habitaciones.getNroHabitacion())
+                        .tipoHabitacion(habitaciones.getTipoHabitacion())
+                        .cantHuespedes(habitaciones.getCantHuespedes())
+                        .precio(habitaciones.getPrecio())
+                        .fechaDeIngreso(habitaciones.getFechaDeIngreso())
+                        .fechaDeEgreso(habitaciones.getFechaDeEgreso())
+                        .clientes(habitaciones.getClientes())
+                        .build();
+                habitacionesDTOList.add(habitacionesDTO);
+            }
+            return ResponseEntity.ok(habitacionesDTOList);
+        }
         else
-            return ResponseEntity.ok("Nulo");
+            return ResponseEntity.ok("Null");
     }
 
 

@@ -24,6 +24,6 @@ public interface HabitacionesService {
     Habitaciones save(Habitaciones h);
 
     boolean deleteById (Long id);
-    Clientes returnClientRomm(Long idRoom);
+    Clientes returnClientRoom(Long idRoom);
 
 }

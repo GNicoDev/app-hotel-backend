@@ -57,6 +57,6 @@ public class ControllerHotel {
 
     @PostMapping("mostrarcliente/{idHabitacion}")
     public ResponseEntity<?> returnClienteOfRoom(@PathVariable Long idHabitacion) {
-        return ResponseEntity.ok(habitacionesService.returnClientRomm(idHabitacion));
+        return ResponseEntity.ok(habitacionesService.returnClientRoom(idHabitacion));
     }
 }
