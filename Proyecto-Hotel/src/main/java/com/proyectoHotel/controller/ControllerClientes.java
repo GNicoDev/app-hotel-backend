@@ -69,7 +69,19 @@ public class ControllerClientes {
         if (surname != null) {
             List<Clientes> clientesList = clientesService.findBySurname(surname);
             if (!clientesList.isEmpty()) {
-                return ResponseEntity.ok(clientesList);
+                List<ClientesDTO> clientesDTOList = new ArrayList<>();
+                for (Clientes cliente : clientesList) {
+                    ClientesDTO clientesDTO = ClientesDTO.builder()
+                            .id(cliente.getId())
+                            .nombre(cliente.getNombre())
+                            .apellido(cliente.getApellido())
+                            .dni(cliente.getDni())
+                            .telefono(cliente.getTelefono())
+                            .habitaciones(cliente.getHabitaciones())
+                            .build();
+                    clientesDTOList.add(clientesDTO);
+                }
+                return ResponseEntity.ok(clientesDTOList);
             } else return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.notFound().build();
@@ -78,7 +90,19 @@ public class ControllerClientes {
     //FIND CLIENTE BY DNI
     @GetMapping("buscarpordni/{dni}")
     public ResponseEntity<?> findClienteByDdni(@PathVariable int dni) {
-        return ResponseEntity.ok(clientesService.findByDni(dni));
+        Clientes cliente = clientesService.findByDni(dni);
+        if (cliente!=null) {
+            ClientesDTO clientesDTO = ClientesDTO.builder()
+                    .id(cliente.getId())
+                    .nombre(cliente.getNombre())
+                    .apellido(cliente.getApellido())
+                    .dni(cliente.getDni())
+                    .telefono(cliente.getTelefono())
+                    .habitaciones(cliente.getHabitaciones())
+                    .build();
+            return ResponseEntity.ok(clientesDTO);
+        }
+        else return ResponseEntity.badRequest().build();
     }
 
 
