@@ -26,7 +26,7 @@ public class HabitacionesDTO {
 
     private LocalDateTime fechaDeEgreso;
 
-    private BigDecimal precio;
+    private double precio;
 
     private Clientes clientes;
 }

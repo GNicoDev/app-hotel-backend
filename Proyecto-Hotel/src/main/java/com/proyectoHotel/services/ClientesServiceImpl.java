@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ClientesServiceImpl implements ClientesService {
@@ -15,6 +16,7 @@ public class ClientesServiceImpl implements ClientesService {
     private final ClienteRepository clienteRepository;
 
     public ClientesServiceImpl(ClienteRepository clienteRepository) {
+
         this.clienteRepository = clienteRepository;
     }
 
@@ -30,13 +32,17 @@ public class ClientesServiceImpl implements ClientesService {
 
     @Override
     public List<Clientes> findBySurname(String surname) {
-
-        return clienteRepository.findClientBySurname(surname);
+        List<Clientes> clientes = clienteRepository.findAll().stream()
+                .filter(clientes1 -> clientes1.getApellido() == surname).collect(Collectors.toList());
+        return clientes;
     }
 
     @Override
     public Clientes findByDni(int dni) {
-        return clienteRepository.findClienteByDni(dni);
+        Optional<Clientes> oCliente = clienteRepository.findAll().stream()
+                .filter(clientedni -> clientedni.getDni()== dni).findFirst();
+        Clientes cliente = oCliente.get();
+        return cliente;
     }
 
     @Override

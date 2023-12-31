@@ -14,8 +14,11 @@ import java.util.Optional;
 
 @Service
 public class HabitacionesServiceImpl implements HabitacionesService{
-    @Autowired
-    private HabitacionesRepository habitacionesRepository;
+    private final HabitacionesRepository habitacionesRepository;
+
+    public HabitacionesServiceImpl(HabitacionesRepository habitacionesRepository) {
+        this.habitacionesRepository = habitacionesRepository;
+    }
 
     @Override
     public List<Habitaciones> findAll() {
@@ -27,10 +30,14 @@ public class HabitacionesServiceImpl implements HabitacionesService{
         return habitacionesRepository.findById(id);
     }
 
+
     @Override
     public Optional<Habitaciones> findByNrRoom(int nrRoom) {
+        Optional<Habitaciones> oHabitaciones = habitacionesRepository.findAll().stream()
+                .filter(habitaciones1 -> habitaciones1.getNroHabitacion() == nrRoom).findFirst();
 
-        return habitacionesRepository.findByNrRoom(nrRoom);
+        return oHabitaciones;
+       // return habitacionesRepository.findByNrRoom(nrRoom);
     }
 
     @Override
