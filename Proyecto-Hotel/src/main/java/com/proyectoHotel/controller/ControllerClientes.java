@@ -117,8 +117,9 @@ public class ControllerClientes {
                     .apellido(clientesDTO.getApellido())
                     .telefono(clientesDTO.getTelefono())
                     .build();
+            clientesService.save(cliente);
 
-            return ResponseEntity.ok(clientesService.save(cliente));
+            return (ResponseEntity<?>) ResponseEntity.ok(clientesDTO);
         }
         return ResponseEntity.badRequest().build();
     }
