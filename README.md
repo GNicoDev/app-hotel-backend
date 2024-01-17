@@ -5,7 +5,7 @@
 
 <h3> Configuration </h3>
 
-To run Hotel Booker, you need to have the Java Development Kit (JDK) 17.0.6 and MySql installed and configured on your machine.
+To run App-Hotelotel, you need to have the Java Development Kit (JDK) 17.0.6 and MySql installed and configured on your machine.
 
 
 
