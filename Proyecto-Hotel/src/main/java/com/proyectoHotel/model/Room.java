@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -13,32 +12,32 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Habitaciones {
+public class Room {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
-    private int cantHuespedes;
+    private int guestCount;
 
     @Column(length = 20)
-    private String tipoHabitacion;
+    private String roomType;
     //simple , doble, triple, cuadruple, compartida + de 6
 
     @Column(unique = true)
-    private int nroHabitacion;
+    private int roomNumber;
 
     @Column
-    private LocalDateTime fechaDeIngreso;
+    private LocalDateTime checkInDate;
 
     @Column
-    private LocalDateTime fechaDeEgreso;
+    private LocalDateTime checkOutDate;
 
     @Column
-    private double precio;
+    private double pricePerNight;
 
     @ManyToOne
     @JsonIgnore
-    private Clientes clientes;
+    private Customer customer;
 
 }

@@ -11,27 +11,27 @@ import java.util.*;
 @NoArgsConstructor
 @Builder
 @Entity
-public class Clientes {
+public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
-    private String nombre;
+    private String name;
 
     @Column
-    private String apellido;
+    private String lastName;
 
     @Column(unique = true)
-    private int dni;
+    private String passport;
 
     @Column
-    private String telefono;
+    private String phone;
                               //orphanRemoval sirve para indicarle a la base de datos que
                               //si yo elimino un cliente, automaticamente se eliminan las habitaciones
-    @OneToMany(mappedBy = "clientes", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Habitaciones> habitaciones = new ArrayList<>();
+    private List<Room> rooms = new ArrayList<>();
 
 }
