@@ -1,60 +1,60 @@
 # APP HOTEL - BACKEND
-<h3>App-Hotel is a project made with java and Spring Boot that help hotels to manage their rooms and guests using Rest API architecture.</h3>
+<h3>This project is a hotel management application that allows users to manage rooms, customers, and reservations. The application is built using Spring Boot and provides a REST API to interact with the system.</h3>
 
 ---
 
 <h3> Configuration </h3>
 
-To run App-Hotelotel, you need to have the Java Development Kit (JDK) 17.0.6 and MySql installed and configured on your machine.
+To run App-Hotel, you need to have the Java Development Kit (JDK) 17.0.6 and MySql installed and configured on your machine.
 
-
+## Features 
+- Room Management: Create, update, delete, and view rooms. 
+- Customer Management: Create, update, delete, and view customers. 
+- Reservation Management: Create reservations for specific rooms and customers.
 
 >**Endpoints & Demonstration: Rooms**  
-  Rooms: /hotel/habitaciones   
+  Rooms: /hotel/rooms   
 >
-| METHOD | ENDPOINT | DESCRIPTION | CODE |
-|-----|:---------------|:---------------|:---------------|
-|     GET| /buscar/{id}   |       Find a room by id     | 200 |
-|     GET| /listardisponibles/{cantHuespedes}     |        Find available rooms according to guests' number     | 200 |
-|     GET| /buscarhabitacion/{nro}    |        Find a room by number       | 200    |
-|     GET| /listar    |        List all rooms       | 200    |
-|     POST| /guardar    |       Create a new room    | 201 |
-|     POST| /actualizar/{id}    |       Update a room    | 200    |
-|     POST| /borrar/{id}    |       Delete room from database  | 200     |
+| Method | Endpoint | Description | 
+|--------|-------------------------------|---------------------------------------------| 
+| GET | /hotel/rooms | Get all rooms | 
+| GET | /hotel/rooms/{id} | Get a room by ID | 
+| GET | /hotel/rooms/number/{roomNumber} | Get a room by number | 
+| POST | /hotel/rooms | Create a new room | 
+| PUT | /hotel/rooms/{id} | Update an existing room | 
+| DELETE | /hotel/rooms/{id} | Delete a |
 
->Note:  I always use GET to query tables, POST to create, PUT to update, and DELETE to delete, but this time I was forced to use them this way to connect back-end to front-end, due to my inexperience using Angular.
 ---
->**Endpoints & Demonstration: Guests**  
-  Guests: /hotel/clientes   
+>**Endpoints & Demonstration: Customers**  
+  Customers: /hotel/customers   
 >
-| METHOD | ENDPOINT | DESCRIPTION | CODE |
-|-----|:---------------|:---------------|:---------------|
-|     GET| /buscar/{id}   |       Find a guest by id     | 200 |
-|     GET| /listarporapellidos/{surname}     |        List all guests according to the surname     | 200 |
-|     GET| /buscarpordni/{dni}    |        Find a guest by dni      | 200    |
-|     GET| /listar    |        List all guests       | 200    |
-|     POST| /guardar    |       Create a new guest    | 200 |
-|     POST| /actualizar/{id}    |       Update a guest    | 200    |
-|     POST| /borrar/{id}    |       Delete guest from database  | 200     |
-
+| Method | Endpoint | Description |
+|--------|-------------------------------|---------------------------------------------| 
+| GET | /hotel/customers | Get all customers | 
+| GET | /hotel/customers/{id} | Get a customer by ID | 
+| GET | /hotel/customers/lastname/{lastName} | Get customers by last name | 
+| GET | /hotel/customers/passport/{passport} | Get customers by passport | 
+| POST | /hotel/customers | Create a new customer | 
+| PUT | /hotel/customers/{id} | Update an existing customer | 
+| DELETE | /hotel/customers/{id} | Delete a customer | ### Reservations
 
 ---
 >**Endpoints & Demonstration: Hotel**  
   Hotel: /hotel  
 >
-| METHOD | ENDPOINT | DESCRIPTION | CODE |
-|-----|:---------------|:---------------|:---------------|
-|     POST| /reservar/{idCliente}    |     Create a Check-in      | 200 |
-|     POST| /checkout/{nroHab}    |       Create a Check-out   | 200    |
-|     POST| /mostrarcliente/{idHabitacion}    |       Return the guest of a room   | 200     |
+| METHOD | ENDPOINT                                                    | DESCRIPTION                                       |
+|--------|:------------------------------------------------------------|:--------------------------------------------------|
+| POST   | /hotel/rooms/{customerId}/reservation                       | Create a new reservation for a customer in a room | 
+| POST   | /rooms/{nroHab}/checkout                                    | Create a Check-out                                | 
+| GET    | /rooms/{roomId}/customer                                    | Get the customer of a room                        | 
 >
 
 # Room's body
 ```json
 {
-    "nroHabitacion": 232,
-    "tipoHabitacion": "Triple",
-    "precio" : 8700.0
+    "roomNumber": 232,
+    "roomType": "Doble",
+    "pricePerNight" : 87.0
 }
 ```
 
@@ -62,54 +62,54 @@ To run App-Hotelotel, you need to have the Java Development Kit (JDK) 17.0.6 and
 
 <li>id - generated automatically
 
-<li>nroHabitacion - the room's number
+<li>roomNumber - the room's number
 
-<li>tipoHabitacion - Room type according to the number of guests it can accomodate: "Simple", "Doble", "Triple", "Cuadruple"
+<li>roomType - Room type according to the number of guests it can accomodate: "Simple", "Doble", "Triple", "Cuadruple"
 
-<li>precio - the cost per night of the room
+<li>pricePerNight - the cost per night of the room
 
 >
 
-# Guest's body
+# Customer's body
 ```json
 {
-    "nombre": "Juan",
-    "apellido": "Fiaschetti",
-    "dni":"104456768",
-    "telefono": "2494 097331"
+    "name": "Juan",
+    "lastName": "Fiaschetti",
+    "passport":"104456768",
+    "phone": "2494 097331"
 }
 ```
 
 > Summary
 <li>id - generated automatically
 
-<li>nombre - the guest name
+<li>name - the guest name
 
-<li>apellido - the guest surname
+<li>lastName - the guest surname
 
-<li>dni - Documento Nacion de Identidad (unique) (only 11 characters)
+<li>passport -  (unique) (only 11 characters)
 
-<li>telefono - Phone number
+<li>phone - Phone number
 
 # Check-in's body
 ```json
 {
-    "nroHabitacion": 412,
-    "cantHuespedes": 3,
-    "fechaDeIngreso": "2023-05-04T16:56:20.263Z",
-    "fechaDeEgreso": "2023-05-09T16:56:20.263Z"
+    "roomNumber": 412,
+    "guestCount": 3,
+    "checkInDate": "2023-05-04T16:56:20.263Z",
+    "checkOutDate": "2023-05-09T16:56:20.263Z"
 }
 ```
 
 > Summary
 
-<li>nroHabitacion - Room's number to be occupied
+<li>roomNumber - Room's number to be occupied
 
-<li>cantHuespedes - Number of guests occupying the room
+<li>guestCount - Number of guests occupying the room
 
-<li>fechaDeIngreso - Check-in date
+<li>checkInDate - Check-in date
 
-<li>fechaDeEgreso - Check-out date
+<li>checkOutDate - Check-out date
 
 
 <h3>
