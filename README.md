@@ -12,6 +12,9 @@ To run App-Hotel, you need to have the Java Development Kit (JDK) 17.0.6 and MyS
 - Customer Management: Create, update, delete, and view customers. 
 - Reservation Management: Create reservations for specific rooms and customers.
 
+## Endpoints
+### Rooms
+
 >**Endpoints & Demonstration: Rooms**  
   Rooms: /hotel/rooms   
 >
@@ -26,6 +29,7 @@ To run App-Hotel, you need to have the Java Development Kit (JDK) 17.0.6 and MyS
 | DELETE | /hotel/rooms/{id} | Delete a room | N/A | 200 OK | 404 Not Found
 
 ---
+### Customers
 >**Endpoints & Demonstration: Customers**  
   Customers: /hotel/customers   
 >
@@ -44,13 +48,13 @@ To run App-Hotel, you need to have the Java Development Kit (JDK) 17.0.6 and MyS
 ---
 >**Endpoints & Demonstration: Hotel**  
   Hotel: /hotel  
->
+
 | METHOD | ENDPOINT | DESCRIPTION | Request Body Example | Success Response Example | Error Codes | 
 |--------|----------|-------------|----------------------|--------------------------|-------------| 
 | POST | /hotel/rooms/{customerId}/reservation | Create a new reservation for a customer in a room | ```json {"roomNumber": 412, "guestCount": 3, "checkInDate": "2023-05-04T16:56:20.263Z", "checkOutDate": "2023-05-09T16:56:20.263Z"} ``` | 201 Created, {...} | 400 Bad Request, 404 Not Found | 
 | POST | /rooms/{nroHab}/checkout | Create a Check-out | N/A | 200 OK | 400 Bad Request, 404 Not Found | 
 | GET | /rooms/{roomId}/customer | Get the customer of a room | N/A | 200 OK, {...} | 404 Not Found |
->
+
 ## Request bodies
 ### Room
 ```json
