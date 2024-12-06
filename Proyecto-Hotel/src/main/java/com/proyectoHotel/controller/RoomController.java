@@ -1,6 +1,7 @@
 package com.proyectoHotel.controller;
 
 import com.proyectoHotel.controller.dto.RoomDTO;
+import com.proyectoHotel.mapper.RoomMapper;
 import com.proyectoHotel.model.Room;
 import com.proyectoHotel.services.RoomsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,57 +11,31 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/hotel/")
 @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080"})
 
 public class RoomController {
+
+    private final RoomsService roomsService;
+    private final RoomMapper roomMapper;
     @Autowired
-    RoomsService roomsService;
-
-    // FIND ROOM BY ID
-    @GetMapping("rooms/{id}")
-    public ResponseEntity<?> findRoomById(@PathVariable Long id) {
-
-        Optional<Room> optionalRoom = roomsService.findById(id);
-        if (optionalRoom.isPresent()) {
-            Room room = optionalRoom.get();
-
-            RoomDTO roomDTO = RoomDTO.builder()
-                    .id(room.getId())
-                    .roomNumber(room.getRoomNumber())
-                    .roomType(room.getRoomType())
-                    .guestCount(room.getGuestCount())
-                    .pricePerNight(room.getPricePerNight())
-                    .checkInDate(room.getCheckInDate())
-                    .checkOutDate(room.getCheckOutDate())
-                    .build();
-            return ResponseEntity.ok(roomDTO);
-        }
-        return ResponseEntity.notFound().build();
+    public RoomController(RoomsService roomsService, RoomMapper roomMapper) {
+        this.roomsService = roomsService;
+        this.roomMapper = roomMapper;
     }
 
-    //List all rooms
+    //LIST ALL ROOMS
     @GetMapping("rooms")
     public ResponseEntity<?> listAllRooms() {
         List<Room> roomList = roomsService.findAll();
-        List<RoomDTO> roomDTOList = new ArrayList<>();
-        for (Room room : roomList) {
-            RoomDTO roomDTO = RoomDTO.builder()
-                    .id(room.getId())
-                    .roomNumber(room.getRoomNumber())
-                    .roomType(room.getRoomType())
-                    .guestCount(room.getGuestCount())
-                    .pricePerNight(room.getPricePerNight())
-                    .checkInDate(room.getCheckInDate())
-                    .checkOutDate(room.getCheckOutDate())
-                    .build();
-            roomDTOList.add(roomDTO);
-        }
+        List<RoomDTO> roomDTOList = roomList.stream()
+                .map(roomMapper::toDTO).collect(Collectors.toList());
 
         return ResponseEntity.ok(roomDTOList);
     }
@@ -70,19 +45,10 @@ public class RoomController {
     public ResponseEntity showRoomByNumber (@PathVariable int number) {
         Optional<Room> optionalRoom = roomsService.findByNrRoom(number);
         if (optionalRoom.isPresent()) {
-            Room room = optionalRoom.get();
-            RoomDTO roomDTO = RoomDTO.builder()
-                    .id(room.getId())
-                    .roomNumber(room.getRoomNumber())
-                    .roomType(room.getRoomType())
-                    .guestCount(room.getGuestCount())
-                    .pricePerNight(room.getPricePerNight())
-                    .checkInDate(room.getCheckInDate())
-                    .checkOutDate(room.getCheckOutDate())
-                    .build();
+            RoomDTO roomDTO = roomMapper.toDTO(optionalRoom.get());
             return ResponseEntity.ok(roomDTO);
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Room not found with number: " + number);
     }
 
     //SHOW AVAILABLE ROOMS ACCORDING GUESS QUANTITY
@@ -90,64 +56,56 @@ public class RoomController {
     public ResponseEntity<?> listRoomsAvailable(@PathVariable int guestCount) {
         List<Room> roomList = roomsService.listRoomsAvailable(guestCount);
         if (roomList != null) {
-            List<RoomDTO> roomDTOList = new ArrayList<>();
-            for (Room room : roomList) {
-                RoomDTO roomDTO = RoomDTO.builder()
-                        .id(room.getId())
-                        .roomNumber(room.getRoomNumber())
-                        .roomType(room.getRoomType())
-                        .guestCount(room.getGuestCount())
-                        .pricePerNight(room.getPricePerNight())
-                        .checkInDate(room.getCheckInDate())
-                        .checkOutDate(room.getCheckOutDate())
-                        .build();
-                roomDTOList.add(roomDTO);
-            }
+            List<RoomDTO> roomDTOList = roomList.stream()
+                    .map(roomMapper::toDTO).collect(Collectors.toList());
             return ResponseEntity.ok(roomDTOList);
         }
         else
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("No rooms available for guest count: " + guestCount);
+    }
+
+    // FIND ROOM BY ID
+    @GetMapping("rooms/{id}")
+    public ResponseEntity<?> findRoomById(@PathVariable Long id) {
+
+        Optional<Room> optionalRoom = roomsService.findById(id);
+        if (optionalRoom.isPresent()) {
+            RoomDTO roomDTO = roomMapper.toDTO(optionalRoom.get());
+            return ResponseEntity.ok(roomDTO);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Room not found with ID: " + id);
     }
 
 
     // SAVE ROOM
     @PostMapping("rooms")
-    public ResponseEntity<?> saveRoom(@RequestBody RoomDTO roomDTO) throws URISyntaxException {
+    public ResponseEntity<?> saveRoom(@Valid @RequestBody RoomDTO roomDTO) throws URISyntaxException {
         if (roomDTO.getRoomNumber()!= 0 && !roomDTO.getRoomType().isEmpty() && roomDTO.getPricePerNight() != 0 ) {
             if (roomsService.findByNrRoom(roomDTO.getRoomNumber()).isEmpty()) {
-                Room newRoom = roomsService.save(Room.builder()
-                        .roomNumber(roomDTO.getRoomNumber())
-                        .roomType(roomDTO.getRoomType())
-                        .pricePerNight(roomDTO.getPricePerNight())
-                        .build());
-                RoomDTO roomDTOcreated = RoomDTO.builder()
-                        .id(newRoom.getId())
-                        .roomNumber(roomDTO.getRoomNumber())
-                        .roomType(roomDTO.getRoomType())
-                        .pricePerNight(roomDTO.getPricePerNight())
-                        .build();
+                Room newRoom = roomsService.save(roomMapper.fromDTO(roomDTO));
+                RoomDTO roomDTOcreated = roomMapper.toDTO(newRoom);
                 return ResponseEntity.created(new URI("/hotel/rooms")).body(roomDTOcreated);
             }
             else {
-                return new ResponseEntity<>(HttpStatus.CONFLICT);
-            }
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Room number already exists");            }
         }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid room data");
     }
 
     //UPDATE ROOM
     @PutMapping("rooms/{id}")
-    public ResponseEntity<?> updateRoom(@RequestBody RoomDTO roomDTO, @PathVariable Long id) {
+    public ResponseEntity<?> updateRoom(@Valid @RequestBody RoomDTO roomDTO, @PathVariable Long id) {
         Optional<Room> optionalRoom = roomsService.findById(id);
         if (optionalRoom.isPresent()) {
             Room room = optionalRoom.get();
-            room.setRoomNumber(roomDTO.getRoomNumber());
-            room.setRoomType(roomDTO.getRoomType());
-            room.setPricePerNight(roomDTO.getPricePerNight());
+            roomMapper.updateRoomFromDTO(roomDTO,room);
 
-            return ResponseEntity.ok(roomsService.save(room));
+            Room updatedRoom = roomsService.save(room);
+
+            RoomDTO updatedRoomDTO = roomMapper.toDTO(updatedRoom);
+            return ResponseEntity.ok(updatedRoomDTO);
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Room not found with ID: " + id);
     }
 
     // DELETE ROOM
@@ -157,6 +115,7 @@ public class RoomController {
         if (optionalRoom.isPresent()) {
             return ResponseEntity.ok(roomsService.deleteById(id));
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Room not found with ID: " + id);
     }
+
 }
