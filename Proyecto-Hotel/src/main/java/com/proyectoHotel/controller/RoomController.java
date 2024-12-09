@@ -55,7 +55,7 @@ public class RoomController {
     @GetMapping("rooms/available/{guestCount}")
     public ResponseEntity<?> listRoomsAvailable(@PathVariable int guestCount) {
         List<Room> roomList = roomsService.listRoomsAvailable(guestCount);
-        if (roomList != null) {
+        if (!roomList.isEmpty()) {
             List<RoomDTO> roomDTOList = roomList.stream()
                     .map(roomMapper::toDTO).collect(Collectors.toList());
             return ResponseEntity.ok(roomDTOList);

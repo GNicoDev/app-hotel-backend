@@ -1,10 +1,8 @@
 package com.proyectoHotel.controller;
 
 import com.proyectoHotel.controller.dto.CustomerDTO;
-import com.proyectoHotel.controller.dto.RoomDTO;
 import com.proyectoHotel.mapper.CustomerMapper;
 import com.proyectoHotel.model.Customer;
-import com.proyectoHotel.model.Room;
 import com.proyectoHotel.services.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +48,7 @@ public class CustomerController {
         Optional<Customer> optionalCustomer = customerService.findById(id);
         if (optionalCustomer.isPresent()) {
             CustomerDTO customerDTO = customerMapper.toDTO(optionalCustomer.get());
+            System.out.println(customerDTO.getRooms()); // Añade esto para verificar
             return ResponseEntity.ok(customerDTO);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer not found with ID: " + id);
@@ -104,7 +103,7 @@ public class CustomerController {
         Optional<Customer> optionalCustomer = customerService.findById(id);
         if (optionalCustomer.isPresent()) {
             Customer customer = optionalCustomer.get();
-            customerMapper.updateRoomFromDTO(customerDTO,customer);
+            customerMapper.updateCustomerFromDTO(customerDTO,customer);
 
             Customer updatedCustomer = customerService.save(customer);
 

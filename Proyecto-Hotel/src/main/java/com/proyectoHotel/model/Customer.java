@@ -31,7 +31,7 @@ public class Customer {
                               //orphanRemoval sirve para indicarle a la base de datos que
                               //si yo elimino un cliente, automaticamente se eliminan las habitaciones
     @OneToMany(mappedBy = "customer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnore
+   // @JsonIgnore
     private List<Room> rooms = new ArrayList<>();
 
 }

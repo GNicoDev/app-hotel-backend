@@ -107,4 +107,13 @@ public class RoomsServiceImpl implements RoomsService {
         Room room = optionalRoom.get();
         return room.getCustomer();
     }
+
+    @Override
+    public void roomReset(Room room) {
+        room.setCustomer(null);
+        room.setGuestCount(0);
+        room.setCheckInDate(null);
+        room.setCheckOutDate(null);
+        save(room);
+    }
 }

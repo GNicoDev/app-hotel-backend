@@ -25,4 +25,6 @@ public interface RoomsService {
     boolean deleteById (Long id);
     Customer returnClientRoom(Long idRoom);
 
+    void roomReset(Room room);
+
 }

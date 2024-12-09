@@ -1,6 +1,8 @@
 package com.proyectoHotel.mapper;
 
 import com.proyectoHotel.controller.dto.RoomDTO;
+import com.proyectoHotel.controller.dto.ReservationDTO;
+import com.proyectoHotel.model.Customer;
 import com.proyectoHotel.model.Room;
 import org.springframework.stereotype.Component;
 
@@ -41,4 +43,11 @@ public class RoomMapper {
         room.setCheckOutDate(roomDTO.getCheckOutDate());
     }
 
+    // New method to update Room from ReservationDTO
+    public void updateRoomFromReservationDTO(ReservationDTO reservationDTO, Room room, Customer customer) {
+        room.setCustomer(customer);
+        room.setGuestCount(reservationDTO.getGuestCount());
+        room.setCheckInDate(reservationDTO.getCheckInDate());
+        room.setCheckOutDate(reservationDTO.getCheckOutDate());
+    }
 }
